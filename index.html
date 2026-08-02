@@ -102,10 +102,10 @@
   /* 폰(≤480px)에서 2열이면 타일 내용폭이 ~144px 로 좁아 어장명이 여러 줄로 깨진다 → 1열 */
   .tile{background:var(--surface);border:1px solid var(--line);border-radius:13px;padding:13px 15px;
     box-shadow:var(--shadow);display:flex;flex-direction:column;gap:3px;position:relative;overflow:hidden}
-  .tile .lab{font-size:clamp(13px,1.1vw,16px);color:var(--muted);font-weight:700;letter-spacing:.01em}
-  /* 이 화면의 결론이므로 카드 제목(clamp 14~17px)보다 확실히 크게 둔다 */
+  /* 라벨이 '무엇에 대한 수치인지' 를 말하므로 충분히 크게 — 수치와의 격차를 좁힌다 */
+  .tile .lab{font-size:clamp(17px,1.7vw,23px);color:var(--ink);font-weight:700;letter-spacing:-.01em}
   .tile .big{font-family:var(--font-mono);font-variant-numeric:tabular-nums;
-    font-size:clamp(38px,5vw,60px);font-weight:700;line-height:1.05;letter-spacing:-.03em}
+    font-size:clamp(30px,3.6vw,44px);font-weight:700;line-height:1.1;letter-spacing:-.03em}
   .tile .sub{font-size:clamp(13px,1.05vw,15.5px);color:var(--muted);margin-top:2px}
   .tile .sub i{font-style:normal;font-weight:700;font-family:var(--font-mono)}
   .tile .sub i.up{color:var(--reg-WS)} .tile .sub i.dn{color:var(--reg-ES)}
@@ -188,6 +188,10 @@
 
 
 
+  /* 로고는 하단 서명 자리에 읽히는 크기로. 머리글(26px)에선 워드마크가 10px 라 뭉갰다.
+     ⚠️ 흰 배경 원본이라 다크 테마용 흰 판을 유지한다(공식 표장 색 반전 금지). */
+  .foot img{height:34px;width:auto;display:block;margin-bottom:10px;
+    background:#fff;padding:4px 7px;border-radius:5px}
   .foot{max-width:1180px;margin:16px auto 6px;font-size:11.5px;color:var(--muted);line-height:1.55}
   .foot b{color:var(--ink);font-weight:700}
   .chip{display:inline-block;font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:6px;margin-right:5px}
@@ -199,7 +203,7 @@
 <div class="wrap">
   <header class="top">
     <div class="brand">
-      <div class="eyebrow"><img id="logo" alt="국립수산과학원" hidden><span id="org">국립수산과학원 · AI 어황 예보</span></div>
+      <div class="eyebrow">국립수산과학원</div>
       <h1><span class="h1-pre">한눈에 확인하는</span>AI 기반 고등어 어황 예보 서비스</h1>
       <div class="sub">대형선망 어업 대상</div>
     </div>
@@ -263,9 +267,10 @@
 
     </div>
 
-  <p class="foot">
-    본 화면은 <b>시범운영 참고자료</b>로 정식 공표용이 아닙니다.
-  </p>
+  <div class="foot">
+    <img id="logo" alt="국립수산과학원" hidden>
+    <p>본 화면은 <b>시범운영 참고자료</b>로 정식 공표용이 아닙니다.</p>
+  </div>
 </div>
 
 <script>
