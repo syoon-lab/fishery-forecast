@@ -223,15 +223,7 @@
 
     <section class="grid three">
       <div class="card">
-        <div class="maprow" style="margin-bottom:12px">
-          <h2 style="margin:0">월별 전망</h2>
-          <div class="seg" id="monseg" role="group" aria-label="월별 권역">
-            <button data-r="ALL" aria-pressed="true">전체</button>
-            <button data-r="ES" aria-pressed="false">동해</button>
-            <button data-r="WS" aria-pressed="false">서해</button>
-            <button data-r="SS" aria-pressed="false">남해</button>
-          </div>
-        </div>
+        <h2>월별 전망</h2>
         <p class="note" id="monnote"></p>
         <div class="bars" id="monbars"></div>
         <p class="vbar-note" id="monfoot"></p>
@@ -436,9 +428,8 @@ function cmpLabel(g){
 }
 
 /* 월별 */
-let mreg='ALL';
 function renderMon(){
-  const rows=outRows().filter(r=>mreg==='ALL'||r.reg===mreg);
+  const rows=outRows();
   if(!rows.length){$('#monbars').innerHTML='';return;}
   const by=agg(rows,r=>r.m);
   const groups=Object.values(by).sort((a,b)=>a.key-b.key);
@@ -454,8 +445,6 @@ function renderMon(){
   $('#monfoot').innerHTML=`분기 합계 전망 <b class="mono">${fmt(tot.fc)}</b>톤 — `+
     `${cmp(tot.clim5,'평년')}, ${cmp(tot.prev,'전년')}.`;
 }
-$('#monseg').onclick=e=>{const b=e.target.closest('button');if(!b)return;
-  mreg=b.dataset.r;[...e.currentTarget.children].forEach(x=>x.setAttribute('aria-pressed',x===b));renderMon();};
 
 /* 권역별 */
 function renderReg(){
