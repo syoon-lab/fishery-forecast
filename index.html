@@ -156,8 +156,9 @@
     background:var(--ink);color:var(--surface);padding:7px 10px;border-radius:8px;font-size:11.5px;
     line-height:1.45;white-space:nowrap;z-index:5;box-shadow:0 6px 18px rgba(0,0,0,.28);transition:opacity .1s}
   .tip .mono{font-size:11.5px}
-  .legend{display:flex;align-items:center;gap:9px;margin-top:11px;font-size:clamp(11.5px,0.9vw,13px);color:var(--muted)}
-  .legbar{height:11px;flex:1;border-radius:6px;border:1px solid var(--line);max-width:230px}
+  .legend{display:flex;align-items:center;justify-content:center;gap:9px;margin-top:11px;
+    font-size:clamp(11.5px,0.9vw,13px);color:var(--muted)}
+  .legbar{height:11px;width:min(230px,40vw);border-radius:6px;border:1px solid var(--line)}
   .legend .mono{font-size:clamp(11.5px,0.9vw,13px);color:var(--ink)}
 
   /* bars */
@@ -370,7 +371,7 @@ function renderMap(){
   svg.innerHTML=g;
   // legend
   const lo=$('#legLo'),hi=$('#legHi');
-  $('#legUnit').textContent='(각 시기 안에서의 상대 비교)';
+  $('#legUnit').textContent='';
   const bar=$('#legbar');
   const stops=BINS.map((b,i)=>{const c=ramp((i+.5)/BINS.length,'--seq-lo','--seq-hi');
     return `${c} ${i/BINS.length*100}%, ${c} ${(i+1)/BINS.length*100}%`;}).join(',');
