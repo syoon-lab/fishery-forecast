@@ -109,6 +109,9 @@
   .tile .big{font-family:var(--font-mono);font-variant-numeric:tabular-nums;
     font-size:clamp(30px,3.6vw,44px);font-weight:700;line-height:1.1;letter-spacing:-.03em}
   .tile .sub{font-size:clamp(13px,1.05vw,15.5px);color:var(--muted);margin-top:2px}
+  /* '평년' 정의는 그 말이 **처음 나오는** 이 블록에서 한 번만 밝힌다 */
+  .tile .climdef{font-size:clamp(11.5px,0.9vw,13px);color:var(--muted);margin-top:8px;
+    padding-top:8px;border-top:1px dashed var(--line)}
   .tile .sub i{font-style:normal;font-weight:700;font-family:var(--font-mono)}
   .tile .sub i.up{color:var(--reg-WS)} .tile .sub i.dn{color:var(--reg-ES)}
   .tile.official{border-top:3px solid var(--official)}
@@ -226,6 +229,7 @@
         <span class="lab" id="offlab"></span>
         <span class="big acc mono" id="offbig"></span>
         <span class="sub" id="dirsub"></span>
+        <span class="climdef" id="climdef"></span>
       </div>
     </section>
 
@@ -233,7 +237,6 @@
       <div class="card">
         <h2>월별 어획량 전망 <span class="unit">[단위: 톤]</span></h2>
         <div class="bars" id="monbars"></div>
-        <p class="vbar-note" id="climdef"></p>
       </div>
       <div class="card">
         <h2>권역별 어획량 전망 <span class="unit">[단위: 톤]</span></h2>
@@ -450,8 +453,6 @@ function renderMon(){
   const groups=Object.values(by).sort((a,b)=>a.key-b.key);
   const mx=Math.max(...groups.flatMap(g=>SER.map(s=>g[s.k])),1);
   $('#monbars').innerHTML=groupBars(groups,mx,g=>`<b>${g.key}월</b>`);
-  /* '평년' 정의는 처음 나오는 이 카드에서 한 번만 밝힌다 */
-  set('#climdef', (L.outlook&&L.outlook.clim5Label)||'');
 }
 
 /* 권역별 */
@@ -472,7 +473,8 @@ const set=(sel,html)=>{const e=$(sel); if(e) e.innerHTML=html;};
 /* 수치 앞뒤 부속어는 같은 크기로 — '어획량 38,290 톤' 이 한 덩어리로 읽히게 */
 const AFFIX=s=>`<span style="font-size:.42em;font-weight:600">${s}</span>`;
 const TON=AFFIX(' 톤'), LEAD=AFFIX('어획량 ');
-set('#offlab', (L.short||'') + ' 전망');   /* 예: 2026년 3분기 전망 */
+set('#offlab', (L.short||'') + ' 전망');
+set('#climdef', (L.outlook&&L.outlook.clim5Label)||'');   /* 예: 2026년 3분기 전망 */
 if(DATA.logo){const lg=$('#logo'); lg.src=DATA.logo; lg.hidden=false;}
 set('#offbig', LEAD+(L.officialFmt||'—')+TON);
 /* 막대 그래프와 **같은 표현·같은 순서**(평년 → 전년)로 통일. 화면마다 다르면 대조가 어렵다. */
