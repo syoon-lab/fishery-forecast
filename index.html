@@ -147,6 +147,8 @@
     stroke-linejoin:round;pointer-events:none}
   .grat{stroke:color-mix(in srgb,var(--muted) 26%,transparent);stroke-width:.5;stroke-dasharray:2 3}
   .grat-t{fill:var(--muted);font-size:9px;font-family:var(--font-mono)}
+  svg.map text.cname{fill:color-mix(in srgb,var(--ink) 55%,transparent);
+    font-size:13px;font-weight:700;letter-spacing:.06em;pointer-events:none}
   .tip{position:absolute;pointer-events:none;opacity:0;transform:translate(-50%,-8px);
     background:var(--ink);color:var(--surface);padding:7px 10px;border-radius:8px;font-size:11.5px;
     line-height:1.45;white-space:nowrap;z-index:5;box-shadow:0 6px 18px rgba(0,0,0,.28);transition:opacity .1s}
@@ -355,6 +357,8 @@ function renderMap(){
   // 육지는 셀 **위에** — cartopy 도판(LAND zorder 3 > cells 2)과 같은 순서.
   // 아래에 깔면 해구 격자가 육지를 덮어 해안선이 사라진다.
   g+=landPath();
+  /* 좌표 라벨 대신 국명만 — 지도 범위(lat 31~37)에 한반도 남부가 걸치므로 내륙에 얹는다 */
+  g+=`<text class="cname" x="${X(127.6)}" y="${Y(36.2)}" text-anchor="middle">대한민국</text>`;
   svg.innerHTML=g;
   // legend
   const lo=$('#legLo'),hi=$('#legHi');
