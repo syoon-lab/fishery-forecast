@@ -476,10 +476,12 @@ function renderReg(){
    ⚠️ 요소를 지우고 이 블록의 참조를 안 지우면 TypeError 로 **스크립트 전체가 죽어** 화면이
    통째로 빈다(콘솔에도 안 남을 수 있음). set() 으로 감싸 한 곳이 없어도 나머지는 그린다. */
 const set=(sel,html)=>{const e=$(sel); if(e) e.innerHTML=html;};
-const TON='<span style="font-size:.42em;font-weight:600"> 톤</span>';
+/* 수치 앞뒤 부속어는 같은 크기로 — '어획량 38,290 톤' 이 한 덩어리로 읽히게 */
+const AFFIX=s=>`<span style="font-size:.42em;font-weight:600">${s}</span>`;
+const TON=AFFIX(' 톤'), LEAD=AFFIX('어획량 ');
 set('#offlab', (L.short||'') + ' 전망');   /* 예: 2026년 3분기 전망 */
 if(DATA.logo){const lg=$('#logo'); lg.src=DATA.logo; lg.hidden=false;}
-set('#offbig',(L.officialFmt||'—')+TON);
+set('#offbig', LEAD+(L.officialFmt||'—')+TON);
 /* 막대 그래프와 **같은 표현·같은 순서**(평년 → 전년)로 통일. 화면마다 다르면 대조가 어렵다. */
 set('#dirsub',[
   L.clim5Pct==null?'':`<i class="${L.clim5Pct<0?'dn':'up'}">평년 대비 ${L.clim5Pct>0?'+':''}${L.clim5Pct.toFixed(0)}%</i>`,
