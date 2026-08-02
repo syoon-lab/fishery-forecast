@@ -228,13 +228,13 @@
 
     <section class="grid three">
       <div class="card">
-        <h2>월별 전망</h2>
+        <h2>월별 어획량 전망</h2>
         <p class="note" id="monnote"></p>
         <div class="bars" id="monbars"></div>
         <p class="vbar-note" id="monfoot"></p>
       </div>
       <div class="card">
-        <h2>권역별 전망</h2>
+        <h2>권역별 어획량 전망</h2>
         <p class="note" id="regnote"></p>
         <div class="bars" id="regbars"></div>
       </div>
@@ -375,7 +375,7 @@ function renderMap(){
   const stops=BINS.map((b,i)=>{const c=ramp((i+.5)/BINS.length,'--seq-lo','--seq-hi');
     return `${c} ${i/BINS.length*100}%, ${c} ${(i+1)/BINS.length*100}%`;}).join(',');
   bar.style.background=`linear-gradient(90deg,${stops})`;
-  lo.textContent='어획량 적음'; hi.textContent='많음';
+  lo.textContent='적음'; hi.textContent='많음';
   bindTips();
 }
 function bindTips(){
