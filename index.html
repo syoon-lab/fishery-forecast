@@ -370,12 +370,12 @@ function renderMap(){
   svg.innerHTML=g;
   // legend
   const lo=$('#legLo'),hi=$('#legHi');
-  $('#legUnit').textContent='';
+  $('#legUnit').textContent='(각 시기 안에서의 상대 비교)';
   const bar=$('#legbar');
   const stops=BINS.map((b,i)=>{const c=ramp((i+.5)/BINS.length,'--seq-lo','--seq-hi');
     return `${c} ${i/BINS.length*100}%, ${c} ${(i+1)/BINS.length*100}%`;}).join(',');
   bar.style.background=`linear-gradient(90deg,${stops})`;
-  lo.textContent='적음'; hi.textContent='많음';
+  lo.textContent='어획량 적음'; hi.textContent='많음';
   bindTips();
 }
 function bindTips(){
@@ -386,7 +386,7 @@ function bindTips(){
       /* 상대 비교라 숫자보다 말이 읽기 쉽다. 계열마다 자기 최대 기준이라 '그 시기 안에서' 의 뜻 */
       const LV=['적음','보통','많음','매우 많음'];
       const bl=v=>v<=0?'—':LV[binIdx(v)];
-      const line=`평년 <b class="mono">${bl(c.clim5)}</b> · 전년 <b class="mono">${bl(c.prev)}</b>`
+      const line=`<b>어획량</b><br>평년 <b class="mono">${bl(c.clim5)}</b> · 전년 <b class="mono">${bl(c.prev)}</b>`
         +` · 전망 <b class="mono">${bl(c.fc)}</b>`;
       tip.innerHTML=line;
       const box=svg.getBoundingClientRect(),wrap=svg.parentElement.getBoundingClientRect();
