@@ -102,6 +102,8 @@
   .tile .big{font-family:var(--font-mono);font-variant-numeric:tabular-nums;
     font-size:clamp(21px,2.5vw,27px);font-weight:600;line-height:1.05;letter-spacing:-.02em}
   .tile .sub{font-size:clamp(12px,0.95vw,13.5px);color:var(--muted)}
+  .tile .sub i{font-style:normal;font-weight:700;font-family:var(--font-mono)}
+  .tile .sub i.up{color:var(--reg-WS)} .tile .sub i.dn{color:var(--reg-ES)}
   .tile.official{border-top:3px solid var(--official)}
   .tile.demo{border-top:3px solid var(--demo)}
   .tile .big.acc{color:var(--official)} .tile .big.dem{color:var(--demo)}
@@ -476,10 +478,11 @@ const TON='<span style="font-size:14px"> 톤</span>';
 set('#offlab', (L.short||'') + ' 전망');   /* 예: 2026년 3분기 전망 */
 if(DATA.logo){const lg=$('#logo'); lg.src=DATA.logo; lg.hidden=false;}
 set('#offbig',(L.officialFmt||'—')+TON);
+/* 막대 그래프와 **같은 표현·같은 순서**(평년 → 전년)로 통일. 화면마다 다르면 대조가 어렵다. */
 set('#dirsub',[
-  L.yoyPct==null?'':`전년비 <b>${L.yoyPct>0?'+':''}${L.yoyPct}%</b>`,
-  L.clim5Pct==null?'':`평년비 <b>${L.clim5Pct>0?'+':''}${L.clim5Pct}%</b>`
-].filter(Boolean).join(' · '));
+  L.clim5Pct==null?'':`<i class="${L.clim5Pct<0?'dn':'up'}">평년 대비 ${L.clim5Pct>0?'+':''}${L.clim5Pct.toFixed(0)}%</i>`,
+  L.yoyPct==null?'':`<i class="${L.yoyPct<0?'dn':'up'}">전년 대비 ${L.yoyPct>0?'+':''}${L.yoyPct.toFixed(0)}%</i>`
+].filter(Boolean).join(' / '));
 set('#gndbig',(L.zones&&L.zones.length)
   ? L.zones.map((z,i)=>`<span class="gz">${i+1}. ${z}</span>`).join('')
   : (L.ground||'—'));
