@@ -312,11 +312,10 @@ function diverge(t){ // t in [-1,1]
   return `rgb(${Math.round(lerp(mid[0],pole[0],k))},${Math.round(lerp(mid[1],pole[1],k))},${Math.round(lerp(mid[2],pole[2],k))})`;}
 
 /* ---- map ---- */
-const VIEWS={
-  fc:{key:'fc',unit:'톤'},
-  prev:{key:'prev',unit:'톤'},
-  cl:{key:'clim5',unit:'톤'},
-};
+/* 대외비 성격이라 톤 수치가 아니라 **상대 등급(1~5)** 만 표출한다(생성기에서 등급화·1° 격자). */
+const GRADE_MAX=5;
+const GRADE_LAB=['—','매우 낮음','낮음','보통','높음','매우 높음'];
+const VIEWS={ fc:{key:'fc'}, prev:{key:'prev'}, cl:{key:'clim5'} };
 let view='fc';
 const lons=cells.map(c=>c.lon),lats=cells.map(c=>c.lat);
 const lonMin=Math.min(...lons)-.5,lonMax=Math.max(...lons)+.5;
