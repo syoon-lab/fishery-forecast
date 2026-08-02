@@ -95,10 +95,12 @@
   /* stat tiles */
   /* 전망 총량과 핵심 어장을 **한 블록**으로 — 둘은 같은 질문(얼마나·어디서)의 답이라 붙여 둔다 */
   .tiles{grid-template-columns:1fr;width:100%;margin:0}
-  .summary{flex-direction:row;align-items:center;gap:clamp(20px,4vw,56px);flex-wrap:wrap}
+  /* ⚠️ .tile{flex-direction:column} 이 뒤에 선언돼 있어 .summary 단독으론 덮이지 않는다 → .tile.summary */
+  .tile.summary{flex-direction:row;align-items:center;gap:clamp(20px,4vw,56px);flex-wrap:wrap}
   .summary .sm-l,.summary .sm-r{display:flex;flex-direction:column;gap:3px}
   .summary .sm-r{padding-left:clamp(20px,4vw,56px);border-left:1px solid var(--line)}
-  @media(max-width:600px){.summary{flex-direction:column;align-items:stretch;gap:14px}
+  @media(max-width:600px){
+    .tile.summary{flex-direction:column;align-items:stretch;gap:14px}
     .summary .sm-r{padding-left:0;border-left:0;border-top:1px dashed var(--line);padding-top:12px}}   /* auto 마진 상속 차단(위 .three 주석 참조) */
   /* 폰(≤480px)에서 2열이면 타일 내용폭이 ~144px 로 좁아 어장명이 여러 줄로 깨진다 → 1열 */
   .tile{background:var(--surface);border:1px solid var(--line);border-radius:13px;padding:13px 15px;
