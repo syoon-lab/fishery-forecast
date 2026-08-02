@@ -242,7 +242,7 @@
       <div class="card mapbox">
           <div class="maprow stack">
             <div>
-              <h2>어장 분포 전망</h2>
+              <h2>어획량 분포 전망</h2>
               </div>
             <div class="seg" id="mapseg" role="group" aria-label="지도 보기">
               <button data-v="cl" aria-pressed="false">평년</button>
@@ -370,12 +370,12 @@ function renderMap(){
   svg.innerHTML=g;
   // legend
   const lo=$('#legLo'),hi=$('#legHi');
-  $('#legUnit').textContent='해당 시기 최대 어장 대비';
+  $('#legUnit').textContent='';
   const bar=$('#legbar');
   const stops=BINS.map((b,i)=>{const c=ramp((i+.5)/BINS.length,'--seq-lo','--seq-hi');
     return `${c} ${i/BINS.length*100}%, ${c} ${(i+1)/BINS.length*100}%`;}).join(',');
   bar.style.background=`linear-gradient(90deg,${stops})`;
-  lo.textContent='0'; hi.textContent='1';
+  lo.textContent='적음'; hi.textContent='많음';
   bindTips();
 }
 function bindTips(){
@@ -383,7 +383,9 @@ function bindTips(){
   svg.querySelectorAll('rect.cell').forEach(r=>{
     r.onmousemove=e=>{
       const c=cells[+r.dataset.i]; const vv=val(c);
-      const bl=v=>v<=0?'0':`${(BINS[binIdx(v)]-0.25).toFixed(2)}–${BINS[binIdx(v)].toFixed(2)}`;
+      /* 상대 비교라 숫자보다 말이 읽기 쉽다. 계열마다 자기 최대 기준이라 '그 시기 안에서' 의 뜻 */
+      const LV=['적음','보통','많음','매우 많음'];
+      const bl=v=>v<=0?'—':LV[binIdx(v)];
       const line=`평년 <b class="mono">${bl(c.clim5)}</b> · 전년 <b class="mono">${bl(c.prev)}</b>`
         +` · 전망 <b class="mono">${bl(c.fc)}</b>`;
       tip.innerHTML=line;
