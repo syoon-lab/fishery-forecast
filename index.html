@@ -362,7 +362,7 @@ function renderMap(){
   // 아래에 깔면 해구 격자가 육지를 덮어 해안선이 사라진다.
   g+=landPath();
   /* 좌표 라벨 대신 국명만 — 지도 범위(lat 31~37)에 한반도 남부가 걸치므로 내륙에 얹는다 */
-  g+=`<text class="cname" x="${X(127.6)}" y="${Y(36.2)}" text-anchor="middle">대한민국</text>`;
+  g+=`<text class="cname" x="${X(128.1)}" y="${Y(35.9)}" text-anchor="middle">대한민국</text>`;
   svg.innerHTML=g;
   // legend
   const lo=$('#legLo'),hi=$('#legHi');
