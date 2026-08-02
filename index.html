@@ -73,7 +73,11 @@
   /* header */
   header.top{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;
     max-width:1180px;margin:0 auto 20px;flex-wrap:wrap}
-  .brand h1{font-size:clamp(20px,2.6vw,27px);font-weight:800;margin:.1em 0 0;text-wrap:balance;letter-spacing:-.02em}
+  .brand h1{font-size:clamp(22px,2.9vw,32px);font-weight:800;margin:.05em 0 0;
+    text-wrap:balance;letter-spacing:-.02em;line-height:1.2}
+  /* '한눈에 확인하는' 은 수식어라 본 제목과 다른 결로 — 작게·가늘게·강조색 */
+  .h1-pre{display:block;font-size:clamp(12px,1.15vw,15px);font-weight:600;
+    letter-spacing:.06em;color:var(--accent);margin-bottom:2px}
   .brand .sub{color:var(--muted);font-size:13px;margin-top:2px}
   .head-right{display:flex;align-items:center;gap:10px}
   .badge{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700;
@@ -196,7 +200,7 @@
   <header class="top">
     <div class="brand">
       <div class="eyebrow"><img id="logo" alt="국립수산과학원" hidden><span id="org">국립수산과학원 · AI 어황 예보</span></div>
-      <h1>한눈에 확인하는 AI 기반 고등어 어황 예보 서비스</h1>
+      <h1><span class="h1-pre">한눈에 확인하는</span>AI 기반 고등어 어황 예보 서비스</h1>
       <div class="sub"><b>대형선망 어업</b> 대상</div>
     </div>
     <div class="head-right">
