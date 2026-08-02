@@ -232,7 +232,6 @@
         <h2>월별 어획량 전망</h2>
         <p class="note" id="monnote"></p>
         <div class="bars" id="monbars"></div>
-        <p class="vbar-note" id="monfoot"></p>
       </div>
       <div class="card">
         <h2>권역별 어획량 전망</h2>
@@ -450,15 +449,7 @@ function renderMon(){
   const groups=Object.values(by).sort((a,b)=>a.key-b.key);
   const mx=Math.max(...groups.flatMap(g=>SER.map(s=>g[s.k])),1);
   $('#monbars').innerHTML=groupBars(groups,mx,g=>`<b>${g.key}월</b>`);
-  const tot=groups.reduce((a,g)=>({clim5:a.clim5+g.clim5,prev:a.prev+g.prev,fc:a.fc+g.fc}),
-                          {clim5:0,prev:0,fc:0});
   $('#monnote').innerHTML=`${L.outlook.clim5Label} · 전년 실적 · 금년 전망 · [단위: 톤]`;
-  /* 각주도 막대와 같은 MIN_BASE 규칙 — 기준이 작으면 %를 쓰지 않는다 */
-  const cmp=(base,lab)=>base>=MIN_BASE
-    ? `${lab} ${fmt(base)}톤 대비 <b>${((tot.fc/base-1)*100)>0?'+':''}${((tot.fc/base-1)*100).toFixed(0)}%</b>`
-    : `${lab} ${fmt(base)}톤으로 실적 미미(비율 생략)`;
-  $('#monfoot').innerHTML=`분기 합계 전망 <b class="mono">${fmt(tot.fc)}</b>톤 — `+
-    `${cmp(tot.clim5,'평년')}, ${cmp(tot.prev,'전년')}.`;
 }
 
 /* 권역별 */
