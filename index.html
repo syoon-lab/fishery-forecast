@@ -139,7 +139,9 @@
 
   /* map */
   .mapbox{position:relative}
-  svg.map{width:100%;height:auto;display:block;border-radius:10px;background:var(--surface-2)}
+  /* 값 0(미표시) 구역은 카드와 같은 바탕이어야 '없음' 으로 읽힌다.
+     --surface-2 는 옅게 물들어 있어 '적지만 있다' 로 보였다. */
+  svg.map{width:100%;height:auto;display:block;border-radius:10px;background:var(--surface)}
   svg.map rect.cell{stroke:color-mix(in srgb,var(--ink) 12%,transparent);stroke-width:.4;
     transition:opacity .12s;cursor:crosshair}
   svg.map rect.cell:hover{stroke:var(--ink);stroke-width:1.1}
