@@ -197,7 +197,7 @@
     <div class="brand">
       <div class="eyebrow"><img id="logo" alt="국립수산과학원" hidden><span id="org">국립수산과학원 · AI 어황 예보</span></div>
       <h1>한눈에 확인하는 AI 기반 고등어 어황 예보 서비스</h1>
-      <div class="sub"><span id="qtitle"></span> · 대형선망 · <span class="mono" id="sbcount"></span>개 해구</div>
+      <div class="sub"><b>대형선망 어업</b> 대상 · <span id="qtitle"></span></div>
     </div>
     <div class="head-right">
       <span class="badge">시범운영</span>
@@ -248,8 +248,7 @@
           <div class="maprow stack">
             <div>
               <h2>해구별 어획량</h2>
-              <p class="note" id="mapnote"></p>
-            </div>
+              </div>
             <div class="seg" id="mapseg" role="group" aria-label="지도 보기">
               <button data-v="cl" aria-pressed="false">평년</button>
               <button data-v="prev" aria-pressed="false">전년</button>
@@ -316,9 +315,9 @@ function diverge(t){ // t in [-1,1]
 
 /* ---- map ---- */
 const VIEWS={
-  fc:{key:'fc',   label:`${L.short||''} 예측 어획량 — 권역 전망을 AI 어획 집중도 비율로 해구에 배분`,unit:'톤'},
-  prev:{key:'prev',label:'전년 같은 분기 실적 어획량',unit:'톤'},
-  cl:{key:'clim5', label:`${(L.outlook&&L.outlook.clim5Label)||'평년'} 같은 분기 어획량`,unit:'톤'},
+  fc:{key:'fc',unit:'톤'},
+  prev:{key:'prev',unit:'톤'},
+  cl:{key:'clim5',unit:'톤'},
 };
 let view='fc';
 const lons=cells.map(c=>c.lon),lats=cells.map(c=>c.lat);
@@ -381,7 +380,6 @@ function renderMap(){
   const bar=$('#legbar');
   bar.style.background=`linear-gradient(90deg,${cssv('--seq-lo')},${cssv('--seq-hi')})`;
   lo.textContent=fmt(mn); hi.textContent=fmt(mx);
-  $('#mapnote').innerHTML=v.label;
   bindTips();
 }
 function bindTips(){
@@ -484,7 +482,6 @@ const set=(sel,html)=>{const e=$(sel); if(e) e.innerHTML=html;};
 const TON='<span style="font-size:14px"> 톤</span>';
 set('#qtitle', L.title||'');
 if(DATA.logo){const lg=$('#logo'); lg.src=DATA.logo; lg.hidden=false;}
-set('#sbcount', DATA.meta.nSeablock);
 set('#offbig',(L.officialFmt||'—')+TON);
 set('#suitbig',(L.suitChangePct==null)?'—'
   :`<span style="font-size:13px;font-weight:600">평년 대비 </span>${L.suitChangePct>0?'+':''}${L.suitChangePct}%`);
