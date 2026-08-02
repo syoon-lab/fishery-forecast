@@ -66,8 +66,8 @@
      (색을 반전하거나 배경을 뚫으면 공식 표장을 임의 변형하는 것이 되므로 하지 않는다) */
   .eyebrow img{height:26px;width:auto;display:block;background:#fff;
     padding:3px 5px;border-radius:4px}
-  .eyebrow img:not([hidden])+#org{font-size:0}   /* 로고가 있으면 기관명 텍스트는 숨김 */
-  .eyebrow img:not([hidden])+#org::after{content:'AI 어황 예보';font-size:11px}
+  /* 로고에 기관명이 들어 있으므로 옆 텍스트는 숨긴다(제목은 아래 h1 이 담당) */
+  .eyebrow img:not([hidden])+#org{display:none}
   a{color:var(--accent)}
 
   /* header */
@@ -182,32 +182,7 @@
   .mrow .track{height:16px}
   .mrow .val{font-family:var(--font-mono);font-variant-numeric:tabular-nums;min-width:clamp(44px,4vw,62px);text-align:right;font-size:clamp(12px,0.95vw,14px)}
 
-  /* 방법·검증 (접이식) — 정책 독자에겐 부차적이라 기본은 접어 둔다 */
-  /* 카드와 같은 폭·같은 안쪽 여백 — 3열 그리드 아래에서 선이 어긋나 보이지 않게 */
-  details.method{background:var(--surface);border:1px solid var(--line);border-radius:14px;
-    box-shadow:var(--shadow);padding:0 18px}
-  details.method>summary{cursor:pointer;font-size:13.5px;font-weight:700;color:var(--ink);
-    padding:15px 0;list-style:none;display:flex;align-items:center;gap:9px}
-  details.method>summary::-webkit-details-marker{display:none}
-  details.method>summary::before{content:"?";display:grid;place-items:center;
-    width:20px;height:20px;border-radius:50%;font-size:12px;
-    background:var(--accent);color:var(--surface);flex:none}
-  details.method>summary::after{content:"펼쳐보기";margin-left:auto;font-size:11.5px;
-    font-weight:600;color:var(--accent);border:1px solid color-mix(in srgb,var(--accent) 40%,transparent);
-    border-radius:999px;padding:3px 10px}
-  details.method[open]>summary::after{content:"접기"}
-  details.method>summary:hover::after{background:color-mix(in srgb,var(--accent) 12%,transparent)}
-  .method-body{display:grid;gap:14px;padding-bottom:16px}
-  .method-body .card{box-shadow:none}
 
-  /* pipeline */
-  .pipe{grid-template-columns:repeat(2,1fr)}
-  @media(max-width:760px){.pipe{grid-template-columns:1fr}}
-  .step{background:var(--surface-2);border:1px solid var(--line);border-radius:11px;padding:11px 13px}
-  .step .k{font-family:var(--font-mono);font-size:11px;color:var(--accent);font-weight:600}
-  .step .t{font-size:13px;font-weight:700;margin:3px 0 3px}
-  .step .d{font-size:11.5px;color:var(--muted);line-height:1.4}
-  .step .m{font-family:var(--font-mono);font-size:11px;color:var(--ink);margin-top:6px;font-variant-numeric:tabular-nums}
 
   .foot{max-width:1180px;margin:16px auto 6px;font-size:11.5px;color:var(--muted);line-height:1.55}
   .foot b{color:var(--ink);font-weight:700}
@@ -292,17 +267,7 @@
         </div>
     </section>
 
-      <details class="method">
-        <summary>이 화면의 숫자는 어디서 오나</summary>
-        <div class="method-body">
-
-      <div class="card">
-        <p class="note" style="margin-top:0">화면에 실제로 쓰인 두 가지입니다.</p>
-        <div class="grid pipe" id="pipe"></div>
-      </div>
-      </div>
-    </details>
-  </div>
+    </div>
 
   <p class="foot">
     본 화면은 <b>시범운영 참고자료</b>로 정식 공표용이 아닙니다.<br>
@@ -512,23 +477,6 @@ function renderReg(){
 }
 
 /* ---- pipeline ---- */
-/* ⚠️ 화면에 **실제로 쓰인 것만** 적는다. 이전엔 v5 실험(5계층·앙상블 WAPE·v5 총량)을 적어 뒀는데,
-   화면의 전망치는 v5 가 아니라 운영모델 산출이라 "AI가 이 숫자를 냈다"로 오독될 수 있었다. */
-const PIPE=[
-  ['어획량 전망','분기 · 월별 · 권역별',
-   '조업규제 캘린더로 조업일수를 잡고, 최근 3년 같은 달 어획효율을 곱해 산출합니다. 유가·기상특보로 조업일수를 보정합니다.',
-   `2013–25년 검증 · 분기 증감 방향 적중률 ${DATA.kpi1.v4}`],
-  ['해구별 분포','어디에 몰리나',
-   '수온·해면높이·클로로필 등 해양환경으로 해구마다 어획이 집중되는 정도를 AI(종분포모형)가 판정하고, 권역 전망을 그 비율로 나눕니다.',
-   `출현 판별 AUC ${DATA.auc.envgeo} · 환경 순수기여 +${((DATA.auc.envgeo-DATA.auc.clim)*100).toFixed(1)}pt`],
-];
-$('#pipe').innerHTML=PIPE.map(p=>`<div class="step"><div class="k">${p[0]}</div>
-  <div class="t">${p[1]}</div><div class="d">${p[2]}</div><div class="m">${p[3]}</div></div>`).join('')
-  +`<p class="vbar-note" style="grid-column:1/-1;margin-top:2px">
-     지도는 <b>어획이 집중되는 곳</b>을 나타냅니다. 관측 대조에서 어획량(+0.75)·조업일수(+0.77)와는
-     잘 맞지만 <b>단위 노력당 어획효율(CPUE)과는 무관</b>(−0.32)하므로, 효율이 높은 어장으로 읽으면 안 됩니다.
-     또 판정력의 대부분은 예년의 어장 분포에서 오고 해양환경은 소폭 가산합니다.</p>`;
-
 /* ---- tiles · 분기 문구 (전부 DATA.labels 에서 — HTML 에 하드코딩 금지) ----
    ⚠️ 요소를 지우고 이 블록의 참조를 안 지우면 TypeError 로 **스크립트 전체가 죽어** 화면이
    통째로 빈다(콘솔에도 안 남을 수 있음). set() 으로 감싸 한 곳이 없어도 나머지는 그린다. */
