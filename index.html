@@ -93,8 +93,7 @@
   .card .note{font-size:clamp(12px,0.95vw,13.5px);color:var(--muted);margin:0 0 12px}
 
   /* stat tiles */
-  .tiles{grid-template-columns:repeat(3,1fr);width:100%;margin:0}   /* auto 마진 상속 차단(위 .three 주석 참조) */
-  @media(max-width:820px){.tiles{grid-template-columns:repeat(2,1fr)}}
+  .tiles{grid-template-columns:repeat(2,1fr);width:100%;margin:0}   /* auto 마진 상속 차단(위 .three 주석 참조) */
   /* 폰(≤480px)에서 2열이면 타일 내용폭이 ~144px 로 좁아 어장명이 여러 줄로 깨진다 → 1열 */
   @media(max-width:480px){.tiles{grid-template-columns:1fr}}
   .tile{background:var(--surface);border:1px solid var(--line);border-radius:13px;padding:13px 15px;
@@ -215,11 +214,6 @@
       <div class="tile">
         <span class="lab">핵심 어장</span>
         <span class="big mono" id="gndbig"></span>
-      </div>
-      <div class="tile demo">
-        <span class="lab">어획 집중도</span>
-        <span class="big dem mono" id="suitbig"></span>
-        <span class="sub">어획이 몰리는 정도 · 낮을수록 어장 축소</span>
       </div>
     </section>
 
@@ -482,8 +476,6 @@ const TON='<span style="font-size:14px"> 톤</span>';
 set('#offlab', (L.short||'') + ' 전망');   /* 예: 2026년 3분기 전망 */
 if(DATA.logo){const lg=$('#logo'); lg.src=DATA.logo; lg.hidden=false;}
 set('#offbig',(L.officialFmt||'—')+TON);
-set('#suitbig',(L.suitChangePct==null)?'—'
-  :`<span style="font-size:13px;font-weight:600">평년 대비 </span>${L.suitChangePct>0?'+':''}${L.suitChangePct}%`);
 set('#dirsub',[
   L.yoyPct==null?'':`전년비 <b>${L.yoyPct>0?'+':''}${L.yoyPct}%</b>`,
   L.clim5Pct==null?'':`평년비 <b>${L.clim5Pct>0?'+':''}${L.clim5Pct}%</b>`
