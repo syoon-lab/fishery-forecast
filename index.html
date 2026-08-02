@@ -197,7 +197,7 @@
     <div class="brand">
       <div class="eyebrow"><img id="logo" alt="국립수산과학원" hidden><span id="org">국립수산과학원 · AI 어황 예보</span></div>
       <h1>한눈에 확인하는 AI 기반 고등어 어황 예보 서비스</h1>
-      <div class="sub"><b>대형선망 어업</b> 대상 · <span id="qtitle"></span></div>
+      <div class="sub"><b>대형선망 어업</b> 대상</div>
     </div>
     <div class="head-right">
       <span class="badge">시범운영</span>
@@ -208,7 +208,7 @@
   <div class="grid">
     <section class="grid tiles" aria-label="핵심 지표">
       <div class="tile official">
-        <span class="lab">이번 분기 전망</span>
+        <span class="lab" id="offlab"></span>
         <span class="big acc mono" id="offbig"></span>
         <span class="sub" id="dirsub"></span>
       </div>
@@ -479,7 +479,7 @@ function renderReg(){
    통째로 빈다(콘솔에도 안 남을 수 있음). set() 으로 감싸 한 곳이 없어도 나머지는 그린다. */
 const set=(sel,html)=>{const e=$(sel); if(e) e.innerHTML=html;};
 const TON='<span style="font-size:14px"> 톤</span>';
-set('#qtitle', L.title||'');
+set('#offlab', (L.short||'') + ' 전망');   /* 예: 2026년 3분기 전망 */
 if(DATA.logo){const lg=$('#logo'); lg.src=DATA.logo; lg.hidden=false;}
 set('#offbig',(L.officialFmt||'—')+TON);
 set('#suitbig',(L.suitChangePct==null)?'—'
