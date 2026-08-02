@@ -352,11 +352,12 @@ function renderMap(){
   for(let lat=Math.ceil(latMin);lat<=Math.floor(latMax);lat+=1)
     g+=`<line class="grat" x1="0" y1="${Y(lat)}" x2="${W}" y2="${Y(lat)}"/>`;
   cells.forEach((c,i)=>{
-    const vv=val(c); let fill;
-    if(vv==null){fill='var(--surface)';}
-    else{fill=binColor(vv);}
+    const vv=val(c);
+    /* 값이 없거나 0 인 곳은 **칸 자체를 그리지 않는다**. 배경색으로 칠하면 테두리가 남아
+       '적지만 뭔가 있다' 로 읽힌다. */
+    if(vv==null||vv<=0) return;
     g+=`<rect class="cell" data-i="${i}" x="${X(c.lon)-cw/2}" y="${Y(c.lat)-chh/2}" `+
-       `width="${cw*0.94}" height="${chh*0.94}" rx="1.5" fill="${fill}"/>`;
+       `width="${cw*0.94}" height="${chh*0.94}" rx="1.5" fill="${binColor(vv)}"/>`;
   });
   // 육지는 셀 **위에** — cartopy 도판(LAND zorder 3 > cells 2)과 같은 순서.
   // 아래에 깔면 해구 격자가 육지를 덮어 해안선이 사라진다.
