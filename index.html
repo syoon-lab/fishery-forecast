@@ -340,13 +340,11 @@ function renderMap(){
   const mn=MAPDOM.mn, mx=MAPDOM.mx;
   let g='';
   // graticule
-  for(let lon=Math.ceil(lonMin);lon<=Math.floor(lonMax);lon+=2){
-    g+=`<line class="grat" x1="${X(lon)}" y1="0" x2="${X(lon)}" y2="${H}"/>`+
-       `<text class="grat-t" x="${X(lon)+2}" y="${H-4}">${lon}°E</text>`;}
-  for(let lat=Math.ceil(latMin);lat<=Math.floor(latMax);lat+=1){
-    if(lat%1)continue;
-    g+=`<line class="grat" x1="0" y1="${Y(lat)}" x2="${W}" y2="${Y(lat)}"/>`+
-       `<text class="grat-t" x="3" y="${Y(lat)-2}">${lat}°N</text>`;}
+  /* 격자선만 두고 좌표 라벨은 두지 않는다(위치 특정 최소화) */
+  for(let lon=Math.ceil(lonMin);lon<=Math.floor(lonMax);lon+=2)
+    g+=`<line class="grat" x1="${X(lon)}" y1="0" x2="${X(lon)}" y2="${H}"/>`;
+  for(let lat=Math.ceil(latMin);lat<=Math.floor(latMax);lat+=1)
+    g+=`<line class="grat" x1="0" y1="${Y(lat)}" x2="${W}" y2="${Y(lat)}"/>`;
   cells.forEach((c,i)=>{
     const vv=val(c); let fill;
     if(vv==null){fill='var(--surface)';}
@@ -374,7 +372,7 @@ function bindTips(){
       const pc=v=>`${Math.round(v*100)}%`;
       const line=`평년 <b class="mono">${pc(c.clim5)}</b> · 전년 <b class="mono">${pc(c.prev)}</b>`
         +` · 전망 <b class="mono">${pc(c.fc)}</b>`;
-      tip.innerHTML=`<span class="mono">${c.lon.toFixed(1)}°E ${c.lat.toFixed(1)}°N</span><br>${line}`;
+      tip.innerHTML=line;
       const box=svg.getBoundingClientRect(),wrap=svg.parentElement.getBoundingClientRect();
       tip.style.left=(e.clientX-wrap.left)+'px'; tip.style.top=(e.clientY-wrap.top-12)+'px';
       tip.style.opacity=1; tip.style.transform='translate(-50%,-100%)';
