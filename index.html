@@ -322,6 +322,10 @@ function val(c){ return c[VIEWS[view].key]; }
 /* 색 스케일은 **세 계열 공통**이어야 한다. 뷰마다 최대값으로 정규화하면 같은 색이 뷰마다
    다른 톤수를 뜻하게 되어 평년↔전년↔전망 비교가 성립하지 않는다. */
 const MAPDOM={mn:0, mx:1};   /* 계열별 표준화 → 0~1 고정 축 */
+/* 연속 그라데이션은 미세한 차이가 과해석된다 → **0.2 간격 5구간**으로 끊는다 */
+const BINS=[0.2,0.4,0.6,0.8,1.0];
+const binIdx=v=>{for(let i=0;i<BINS.length;i++) if(v<=BINS[i]+1e-9) return i; return BINS.length-1;};
+const binColor=v=>v<=0?'var(--surface)':ramp((binIdx(v)+.5)/BINS.length,'--seq-lo','--seq-hi');
 
 /* 해안선 — Natural Earth 10m 을 dashboard_data.py 가 단순화해 DATA.land 로 실어준다.
    화면 밖 폴리곤은 건너뛰고, 좌표는 정수로 반올림해 path 문자열을 줄인다. */
@@ -350,7 +354,7 @@ function renderMap(){
   cells.forEach((c,i)=>{
     const vv=val(c); let fill;
     if(vv==null){fill='var(--surface)';}
-    else{const t=mx>mn?(vv-mn)/(mx-mn):.5;fill=ramp(t,'--seq-lo','--seq-hi');}
+    else{fill=binColor(vv);}
     g+=`<rect class="cell" data-i="${i}" x="${X(c.lon)-cw/2}" y="${Y(c.lat)-chh/2}" `+
        `width="${cw*0.94}" height="${chh*0.94}" rx="1.5" fill="${fill}"/>`;
   });
@@ -364,7 +368,9 @@ function renderMap(){
   const lo=$('#legLo'),hi=$('#legHi');
   $('#legUnit').textContent='해당 시기 최대 어장 대비';
   const bar=$('#legbar');
-  bar.style.background=`linear-gradient(90deg,${cssv('--seq-lo')},${cssv('--seq-hi')})`;
+  const stops=BINS.map((b,i)=>{const c=ramp((i+.5)/BINS.length,'--seq-lo','--seq-hi');
+    return `${c} ${i/BINS.length*100}%, ${c} ${(i+1)/BINS.length*100}%`;}).join(',');
+  bar.style.background=`linear-gradient(90deg,${stops})`;
   lo.textContent='0'; hi.textContent='1';
   bindTips();
 }
@@ -373,9 +379,9 @@ function bindTips(){
   svg.querySelectorAll('rect.cell').forEach(r=>{
     r.onmousemove=e=>{
       const c=cells[+r.dataset.i]; const vv=val(c);
-      const pc=v=>`${Math.round(v*100)}%`;
-      const line=`평년 <b class="mono">${pc(c.clim5)}</b> · 전년 <b class="mono">${pc(c.prev)}</b>`
-        +` · 전망 <b class="mono">${pc(c.fc)}</b>`;
+      const bl=v=>v<=0?'0':`${(BINS[binIdx(v)]-0.2).toFixed(1)}–${BINS[binIdx(v)].toFixed(1)}`;
+      const line=`평년 <b class="mono">${bl(c.clim5)}</b> · 전년 <b class="mono">${bl(c.prev)}</b>`
+        +` · 전망 <b class="mono">${bl(c.fc)}</b>`;
       tip.innerHTML=line;
       const box=svg.getBoundingClientRect(),wrap=svg.parentElement.getBoundingClientRect();
       tip.style.left=(e.clientX-wrap.left)+'px'; tip.style.top=(e.clientY-wrap.top-12)+'px';
