@@ -322,8 +322,8 @@ function val(c){ return c[VIEWS[view].key]; }
 /* 색 스케일은 **세 계열 공통**이어야 한다. 뷰마다 최대값으로 정규화하면 같은 색이 뷰마다
    다른 톤수를 뜻하게 되어 평년↔전년↔전망 비교가 성립하지 않는다. */
 const MAPDOM={mn:0, mx:1};   /* 계열별 표준화 → 0~1 고정 축 */
-/* 연속 그라데이션은 미세한 차이가 과해석된다 → **0.2 간격 5구간**으로 끊는다 */
-const BINS=[0.2,0.4,0.6,0.8,1.0];
+/* 연속 그라데이션은 미세한 차이가 과해석된다 → **0.25 간격 4구간**으로 끊는다 */
+const BINS=[0.25,0.5,0.75,1.0];
 const binIdx=v=>{for(let i=0;i<BINS.length;i++) if(v<=BINS[i]+1e-9) return i; return BINS.length-1;};
 const binColor=v=>v<=0?'var(--surface)':ramp((binIdx(v)+.5)/BINS.length,'--seq-lo','--seq-hi');
 
@@ -380,7 +380,7 @@ function bindTips(){
   svg.querySelectorAll('rect.cell').forEach(r=>{
     r.onmousemove=e=>{
       const c=cells[+r.dataset.i]; const vv=val(c);
-      const bl=v=>v<=0?'0':`${(BINS[binIdx(v)]-0.2).toFixed(1)}–${BINS[binIdx(v)].toFixed(1)}`;
+      const bl=v=>v<=0?'0':`${(BINS[binIdx(v)]-0.25).toFixed(2)}–${BINS[binIdx(v)].toFixed(2)}`;
       const line=`평년 <b class="mono">${bl(c.clim5)}</b> · 전년 <b class="mono">${bl(c.prev)}</b>`
         +` · 전망 <b class="mono">${bl(c.fc)}</b>`;
       tip.innerHTML=line;
