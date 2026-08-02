@@ -94,29 +94,21 @@
 
   /* stat tiles */
   /* 전망 총량과 핵심 어장을 **한 블록**으로 — 둘은 같은 질문(얼마나·어디서)의 답이라 붙여 둔다 */
-  .tiles{grid-template-columns:1fr;width:100%;margin:0}
-  /* ⚠️ .tile{flex-direction:column} 이 뒤에 선언돼 있어 .summary 단독으론 덮이지 않는다 → .tile.summary */
-  .tile.summary{flex-direction:row;align-items:center;gap:clamp(20px,4vw,56px);flex-wrap:wrap}
-  .summary .sm-l,.summary .sm-r{display:flex;flex-direction:column;gap:3px}
-  .summary .sm-r{padding-left:clamp(20px,4vw,56px);border-left:1px solid var(--line)}
-  @media(max-width:600px){
-    .tile.summary{flex-direction:column;align-items:stretch;gap:14px}
-    .summary .sm-r{padding-left:0;border-left:0;border-top:1px dashed var(--line);padding-top:12px}}   /* auto 마진 상속 차단(위 .three 주석 참조) */
+  .tiles{grid-template-columns:1fr;width:100%;margin:0}   /* auto 마진 상속 차단(아래 .three 주석 참조) */
   /* 폰(≤480px)에서 2열이면 타일 내용폭이 ~144px 로 좁아 어장명이 여러 줄로 깨진다 → 1열 */
   .tile{background:var(--surface);border:1px solid var(--line);border-radius:13px;padding:13px 15px;
     box-shadow:var(--shadow);display:flex;flex-direction:column;gap:3px;position:relative;overflow:hidden}
-  .tile .lab{font-size:clamp(11.5px,0.9vw,13px);color:var(--muted);font-weight:600;letter-spacing:.02em}
+  .tile .lab{font-size:clamp(13px,1.1vw,16px);color:var(--muted);font-weight:700;letter-spacing:.01em}
+  /* 이 화면의 결론이므로 카드 제목(clamp 14~17px)보다 확실히 크게 둔다 */
   .tile .big{font-family:var(--font-mono);font-variant-numeric:tabular-nums;
-    font-size:clamp(21px,2.5vw,27px);font-weight:600;line-height:1.05;letter-spacing:-.02em}
-  .tile .sub{font-size:clamp(12px,0.95vw,13.5px);color:var(--muted)}
+    font-size:clamp(38px,5vw,60px);font-weight:700;line-height:1.05;letter-spacing:-.03em}
+  .tile .sub{font-size:clamp(13px,1.05vw,15.5px);color:var(--muted);margin-top:2px}
   .tile .sub i{font-style:normal;font-weight:700;font-family:var(--font-mono)}
   .tile .sub i.up{color:var(--reg-WS)} .tile .sub i.dn{color:var(--reg-ES)}
   .tile.official{border-top:3px solid var(--official)}
   .tile.demo{border-top:3px solid var(--demo)}
   .tile .big.acc{color:var(--official)} .tile .big.dem{color:var(--demo)}
   /* 핵심 어장은 구역명 2개가 병기돼 길다 — 줄바꿈 허용하고 글자를 줄인다 */
-  #gndbig{font-size:15px !important;line-height:1.35;white-space:normal;word-break:keep-all}
-  #gndbig .gz{display:block}
 
   .main{grid-template-columns:1.5fr 1fr}
   @media(max-width:900px){.main{grid-template-columns:1fr}}
@@ -215,16 +207,10 @@
 
   <div class="grid">
     <section class="grid tiles" aria-label="핵심 지표">
-      <div class="tile official summary">
-        <div class="sm-l">
-          <span class="lab" id="offlab"></span>
-          <span class="big acc mono" id="offbig"></span>
-          <span class="sub" id="dirsub"></span>
-        </div>
-        <div class="sm-r">
-          <span class="lab">핵심 어장</span>
-          <span class="big mono" id="gndbig"></span>
-        </div>
+      <div class="tile official">
+        <span class="lab" id="offlab"></span>
+        <span class="big acc mono" id="offbig"></span>
+        <span class="sub" id="dirsub"></span>
       </div>
     </section>
 
@@ -483,7 +469,7 @@ function renderReg(){
    ⚠️ 요소를 지우고 이 블록의 참조를 안 지우면 TypeError 로 **스크립트 전체가 죽어** 화면이
    통째로 빈다(콘솔에도 안 남을 수 있음). set() 으로 감싸 한 곳이 없어도 나머지는 그린다. */
 const set=(sel,html)=>{const e=$(sel); if(e) e.innerHTML=html;};
-const TON='<span style="font-size:14px"> 톤</span>';
+const TON='<span style="font-size:.42em;font-weight:600"> 톤</span>';
 set('#offlab', (L.short||'') + ' 전망');   /* 예: 2026년 3분기 전망 */
 if(DATA.logo){const lg=$('#logo'); lg.src=DATA.logo; lg.hidden=false;}
 set('#offbig',(L.officialFmt||'—')+TON);
@@ -492,9 +478,6 @@ set('#dirsub',[
   L.clim5Pct==null?'':`<i class="${L.clim5Pct<0?'dn':'up'}">평년 대비 ${L.clim5Pct>0?'+':''}${L.clim5Pct.toFixed(0)}%</i>`,
   L.yoyPct==null?'':`<i class="${L.yoyPct<0?'dn':'up'}">전년 대비 ${L.yoyPct>0?'+':''}${L.yoyPct.toFixed(0)}%</i>`
 ].filter(Boolean).join(' / '));
-set('#gndbig',(L.zones&&L.zones.length)
-  ? L.zones.map((z,i)=>`<span class="gz">${i+1}. ${z}</span>`).join('')
-  : (L.ground||'—'));
 /* 버튼은 짧게 — 분기는 헤더 부제가 이미 밝힌다 */
 set('#btnfc','금년 전망');
 
