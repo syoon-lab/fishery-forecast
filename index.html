@@ -203,8 +203,8 @@
   .method-body .card{box-shadow:none}
 
   /* pipeline */
-  .pipe{grid-template-columns:repeat(5,1fr)}
-  @media(max-width:820px){.pipe{grid-template-columns:repeat(2,1fr)}}
+  .pipe{grid-template-columns:repeat(2,1fr)}
+  @media(max-width:760px){.pipe{grid-template-columns:1fr}}
   .step{background:var(--surface-2);border:1px solid var(--line);border-radius:11px;padding:11px 13px}
   .step .k{font-family:var(--font-mono);font-size:11px;color:var(--accent);font-weight:600}
   .step .t{font-size:13px;font-weight:700;margin:3px 0 3px}
@@ -227,7 +227,7 @@
       <div class="sub"><span id="qtitle"></span> · 대형선망 · <span class="mono" id="sbcount"></span>개 해구</div>
     </div>
     <div class="head-right">
-      <span class="badge">AI 5계층 시범</span>
+      <span class="badge">시범운영</span>
       <button class="tbtn" id="themeBtn" title="라이트/다크 전환" aria-label="테마 전환">◐</button>
     </div>
   </header>
@@ -246,6 +246,7 @@
       <div class="tile demo">
         <span class="lab">어획 집중도</span>
         <span class="big dem mono" id="suitbig"></span>
+        <span class="sub">어획이 몰리는 정도 · 낮을수록 어장 축소</span>
       </div>
     </section>
 
@@ -298,8 +299,8 @@
         <div class="method-body">
 
       <div class="card">
-        <h2>AI 5계층 파이프라인</h2>
-        <p class="note">환경의 진짜 강점은 시간 방향성이 아니라 <b>공간 분포</b> — L1이 주력, L2는 naive3 앵커로 정직 결합.</p>
+        <h2>이 화면의 숫자는 어디서 오나</h2>
+        <p class="note">화면에 실제로 쓰인 두 가지만 적었습니다.</p>
         <div class="grid pipe" id="pipe"></div>
       </div>
       </div>
@@ -514,15 +515,22 @@ function renderReg(){
 }
 
 /* ---- pipeline ---- */
+/* ⚠️ 화면에 **실제로 쓰인 것만** 적는다. 이전엔 v5 실험(5계층·앙상블 WAPE·v5 총량)을 적어 뒀는데,
+   화면의 전망치는 v5 가 아니라 운영모델 산출이라 "AI가 이 숫자를 냈다"로 오독될 수 있었다. */
 const PIPE=[
-  ['L1','분포 (어디)','종분포모형(SDM)으로 해구별 어획 집중도', `어장 AUC ${DATA.auc.envgeo}`],
-  ['L2','양 (얼마나)','naive3 앵커 + GBM · MLP · LSTM 앙상블', `WAPE ${DATA.qmodels.ensemble.wape} · 방향 ${DATA.qmodels.ensemble.dir}`],
-  ['L3','노력','조업캘린더 × 유가 · 기상특보 (v4 계승)','Effort = 조업일수'],
-  ['L4','통합','어획량 = 노력 × CPUE, SDM으로 해구 배분',`v5 ${fmt(DATA.meta.v5total)} 톤`],
-  ['L5','설명','요인 기여도 · 자동 서사 (XAI)','수심·대마난류·혼합층'],
+  ['어획량 전망','분기 · 월별 · 권역별',
+   '조업규제 캘린더로 조업일수를 잡고, 최근 3년 같은 달 어획효율을 곱해 산출합니다. 유가·기상특보로 조업일수를 보정합니다.',
+   `2013–25년 검증 · 분기 증감 방향 적중률 ${DATA.kpi1.v4}`],
+  ['해구별 분포','어디에 몰리나',
+   '수온·해면높이·클로로필 등 해양환경으로 해구마다 어획이 집중되는 정도를 AI(종분포모형)가 판정하고, 권역 전망을 그 비율로 나눕니다.',
+   `출현 판별 AUC ${DATA.auc.envgeo} · 환경 순수기여 +${((DATA.auc.envgeo-DATA.auc.clim)*100).toFixed(1)}pt`],
 ];
 $('#pipe').innerHTML=PIPE.map(p=>`<div class="step"><div class="k">${p[0]}</div>
-  <div class="t">${p[1]}</div><div class="d">${p[2]}</div><div class="m">${p[3]}</div></div>`).join('');
+  <div class="t">${p[1]}</div><div class="d">${p[2]}</div><div class="m">${p[3]}</div></div>`).join('')
+  +`<p class="vbar-note" style="grid-column:1/-1;margin-top:2px">
+     지도는 <b>어획이 집중되는 곳</b>을 나타냅니다. 관측 대조에서 어획량(+0.75)·조업일수(+0.77)와는
+     잘 맞지만 <b>단위 노력당 어획효율(CPUE)과는 무관</b>(−0.32)하므로, 효율이 높은 어장으로 읽으면 안 됩니다.
+     또 판정력의 대부분은 예년의 어장 분포에서 오고 해양환경은 소폭 가산합니다.</p>`;
 
 /* ---- tiles · 분기 문구 (전부 DATA.labels 에서 — HTML 에 하드코딩 금지) ----
    ⚠️ 요소를 지우고 이 블록의 참조를 안 지우면 TypeError 로 **스크립트 전체가 죽어** 화면이
