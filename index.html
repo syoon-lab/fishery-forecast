@@ -282,17 +282,15 @@ const $ = s => document.querySelector(s);
 document.documentElement.lang='ko';   /* 프래그먼트라 <html lang> 을 못 써서 런타임에 지정 */
 const cells = DATA.cells;
 const L = DATA.labels || {};   /* 분기별 문구 — 생성기 산출 */
-/* 어획량은 **천 톤 단위, 유효숫자 2자리** — 예측·평균치를 톤 단위까지 쓰면 정밀 측정값처럼
-   읽혀 작은 오차도 크게 보이고, 유효숫자만 줄여 00 으로 채우면 단위를 바꾸라는 신호다.
-   막대 길이·증감률은 원값(톤)으로 계산하므로 거칠어지는 것은 표시뿐이다.
-   1천 톤 미만은 소수 첫째 자리까지(0.2), 반올림해 0.0 이 되는 미미한 값은 '<0.1' —
-   0 으로 쓰면 '조업 없음'과 구분이 안 된다. */
+/* 어획량은 **천 톤 단위, 소수 첫째 자리 고정** — 통계표 관례. 유효숫자 방식(13 과 7.6 혼재)은
+   한 표 안에서 자릿수가 섞여 통일감이 없다는 피드백으로 기각. 0.1천 톤(=백 톤) 정밀도라
+   백톤 정수 표기와 정보량이 같지만, 백톤은 통계 관례에 없는 단위고 값이 세 자리(130·370)로
+   커져 오히려 정밀해 보인다. 막대 길이·증감률은 원값(톤)으로 계산하므로 거칠어지는 것은
+   표시뿐이다. 반올림해 0.0 이 되는 미미한 값은 '<0.1' — 0.0(조업 없음)과 구분. */
 const fmt = n => {
-  if(!isFinite(n)||!n) return '0';
+  if(!isFinite(n)||!n) return '0.0';
   const k = n/1000;
-  if(k >= 10)  return Math.round(k).toLocaleString('en-US');
-  if(k >= 0.05) return k.toFixed(1);
-  return '<0.1';
+  return k < 0.05 ? '<0.1' : k.toFixed(1);
 };
 const REGKOR = {SS:'남해',ES:'동해',WS:'서해'};
 
@@ -499,7 +497,9 @@ if(DATA.logo){const lg=$('#logo'); lg.src=DATA.logo; lg.hidden=false;}
 /* '38천 톤 내외' — 공식 전망자료 관례. 점 전망을 톤 단위까지 쓰면 정답처럼 읽혀 오차가
    그대로 신뢰 손상이 되고, 후측 기반 구간(29~51천 톤)은 정직하나 대외 화면엔 너무 넓다.
    구간은 각주(labels.rangeNote)로 내려 근거만 밝힌다. */
-set('#offbig', LEAD+(L.official!=null?fmt(L.official):'—')+TON);
+/* 헤드라인만 정수 — '내외'는 관례상 정수와 붙는다('38.3천 톤 내외'는 러프 표기에 소수가
+   붙어 자가당착). 표의 소수 한 자리는 통계표 관례라 역할이 달라 어색하지 않다. */
+set('#offbig', LEAD+(L.official!=null?String(Math.round(L.official/1000)):'—')+TON);
 /* 막대 그래프와 **같은 표현·같은 순서**(평년 → 전년)로 통일. 화면마다 다르면 대조가 어렵다. */
 set('#dirsub',[relChip(L.clim5Pct,'평년'), relChip(L.yoyPct,'전년')]
   .filter(Boolean).join(' / '));
