@@ -8,7 +8,7 @@
 `index.html` 은 **직접 편집하지 마십시오.** 원본과 생성기는 아래에 있습니다.
 
 ```
-LAB/FisheryFC/고등어/어황예측AI/
+~/FCST/Chubmackerel/어황예측AI/
 ├── dashboard.html      ← 원본
 └── dashboard_data.py   ← 데이터 생성기(DATA 블록 교체)
 ```
@@ -16,7 +16,7 @@ LAB/FisheryFC/고등어/어황예측AI/
 ## 갱신 절차 (분기마다)
 
 ```bash
-cd LAB/FisheryFC/고등어/어획량예측
+cd ~/FCST/Chubmackerel/어획량예측
 conda run -n lab python -m engine.pipeline forecast-cal {분기}     # 운영 전망(먼저)
 cd ../어황예측AI
 conda run -n lab python 분포/sdm_forecast.py {분기}                # 어획 집중도
