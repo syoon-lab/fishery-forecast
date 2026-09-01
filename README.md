@@ -27,6 +27,10 @@ cd /Users/yoon/APP/fishery-forecast && git add -A && git commit -m "..." && git 
 
 `dashboard_data.py` 가 이 폴더의 `index.html` 까지 자동으로 갱신합니다.
 
+체급 카드는 같은 분기의 `체급예측/예보/outputs/size_forecast_{분기}.csv`가 있고 동해·서해·남해
+3권역이 모두 유효할 때만 자동 표시됩니다. 현재 Q3 화면에 Q4 체급값을 섞지 않으며, 파일·권역·분기가
+맞지 않으면 카드가 숨겨집니다. `index.html`의 `sizeForecast`를 손으로 고치지 마십시오.
+
 ## 배포
 
 Vercel 정적 배포(빌드 없음). 저장소를 Vercel 프로젝트에 연결하면 push 시 자동 배포됩니다.
